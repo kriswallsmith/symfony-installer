@@ -91,10 +91,10 @@ else
   $filesystem->replaceTokens(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php', '##', '##', array('PLUGINS' => ''));
 }
 
-// // copy core into project
-// if (sfConfig::get('sf_symfony_lib_dir') != sfConfig::get('sf_lib_dir').'/vendor/symfony')
-// {
-//   _exec('svn mkdir %s', sfConfig::get('sf_lib_dir').'/vendor');
-//   _exec('svn ps svn:externals %s %s', 'symfony http://svn.symfony-project.com/branches/1.3', sfConfig::get('sf_lib_dir').'/vendor');
-//   _exec('cp -R %s %s', sfConfig::get('sf_symfony_lib_dir').'/..', sfConfig::get('sf_lib_dir').'/vendor/symfony');
-// }
+// copy core into project
+if (sfConfig::get('sf_symfony_lib_dir') != sfConfig::get('sf_lib_dir').'/vendor/symfony')
+{
+  _exec('svn mkdir %s', sfConfig::get('sf_lib_dir').'/vendor');
+  _exec('svn ps svn:externals %s %s', 'symfony http://svn.symfony-project.com/branches/1.3', sfConfig::get('sf_lib_dir').'/vendor');
+  _exec('cp -R %s %s', sfConfig::get('sf_symfony_lib_dir').'/..', sfConfig::get('sf_lib_dir').'/vendor/symfony');
+}
