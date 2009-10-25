@@ -1,5 +1,5 @@
 <?php
 
-class ProjectUser extends sfBasicSecurityUser
+class ProjectUser extends sfGuardSecurityUser
 {
 }

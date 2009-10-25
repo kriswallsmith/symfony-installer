@@ -19,16 +19,17 @@ test:
     etag:                   false
 
 all:
-  .settings:
-    # Form security secret (CSRF protection)
-    csrf_secret:            ##CSRF_SECRET##
+  .modules:
+    login_module:           sfGuardAuth
+    login_action:           signin
 
-    # Output escaping settings
+    secure_module:          sfGuardAuth
+    secure_action:          secure
+
+  .settings:
+    csrf_secret:            ##CSRF_SECRET##
     escaping_strategy:      ##ESCAPING_STRATEGY##
     escaping_method:        ESC_SPECIALCHARS
-
-    # Cache settings
     lazy_cache_key:         true
-
-    # Enable the database manager
     use_database:           ##USE_DATABASE##
+    enabled_modules:        [default, sfGuardAuth]
