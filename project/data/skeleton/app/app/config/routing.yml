@@ -1,0 +1,3 @@
+homepage:
+  url:   /
+  param: { module: default, action: index }

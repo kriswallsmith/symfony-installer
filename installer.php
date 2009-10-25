@@ -40,7 +40,20 @@ $plugins = array(
  */
 
 // install files
+$this->getFilesystem()->remove(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php');
 $this->installDir(dirname(__FILE__).'/project');
+
+// javascript
+$properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
+$this->getFilesystem()->rename(
+  sfConfig::get('sf_web_dir').'/js/project',
+  sfConfig::get('sf_web_dir').'/js/'.str_replace('.', '_', $properties['symfony']['name'])
+);
+$this->replaceTokens(sfConfig::get('sf_web_dir').'/js', array(
+  'YEAR'    => date('Y'),
+  'AUTHOR'  => isset($properties['symfony']['author']) ? $properties['symfony']['author'] : 'Your name here',
+  'PROJECT' => sfInflector::camelize($properties['symfony']['name']),
+));
 
 // remove
 array_map(array('sfToolkit', 'clearDirectory'), $remove);
@@ -78,10 +91,10 @@ else
   $filesystem->replaceTokens(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php', '##', '##', array('PLUGINS' => ''));
 }
 
-// copy core into project
-if (sfConfig::get('sf_symfony_lib_dir') != sfConfig::get('sf_lib_dir').'/vendor/symfony')
-{
-  _exec('svn mkdir %s', sfConfig::get('sf_lib_dir').'/vendor');
-  _exec('svn ps svn:externals %s %s', 'symfony http://svn.symfony-project.com/branches/1.3', sfConfig::get('sf_lib_dir').'/vendor');
-  _exec('cp -R %s %s', sfConfig::get('sf_symfony_lib_dir').'/..', sfConfig::get('sf_lib_dir').'/vendor/symfony');
-}
+// // copy core into project
+// if (sfConfig::get('sf_symfony_lib_dir') != sfConfig::get('sf_lib_dir').'/vendor/symfony')
+// {
+//   _exec('svn mkdir %s', sfConfig::get('sf_lib_dir').'/vendor');
+//   _exec('svn ps svn:externals %s %s', 'symfony http://svn.symfony-project.com/branches/1.3', sfConfig::get('sf_lib_dir').'/vendor');
+//   _exec('cp -R %s %s', sfConfig::get('sf_symfony_lib_dir').'/..', sfConfig::get('sf_lib_dir').'/vendor/symfony');
+// }
