@@ -1,4 +1,4 @@
-Use this script as a symfony 1.3 `generate:project` installer:
+Use this script as a symfony 1.4 `generate:project` installer:
 
     $ svn co http://my/empty/trunk my_project
     $ cd my_project

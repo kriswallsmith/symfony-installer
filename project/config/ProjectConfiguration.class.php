@@ -18,8 +18,7 @@ class ProjectConfiguration extends sfProjectConfiguration
   {
     $task = $event->getSubject();
 
-    // we can't watch generate:app but we can watch project:permissions
-    if ($task instanceof sfProjectPermissionsTask)
+    if ($task instanceof sfGenerateAppTask)
     {
       $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
       $finder = sfFinder::type('dir')->relative()->maxdepth(0);
@@ -29,7 +28,7 @@ class ProjectConfiguration extends sfProjectConfiguration
         {
           $task->getFilesystem()->mkdirs($directory = dirname($file).'/user');
           $task->getFilesystem()->rename($file, $file = $directory.'/'.$app.'User.class.php');
-          $task->getFilesystem()->replaceTokens($file, '##', '##', array('SF_APP' => $app));
+          $task->getFilesystem()->replaceTokens($file, '##', '##', array('APP_NAME' => $app));
         }
 
         $task->getFilesystem()->replaceTokens(sfConfig::get('sf_apps_dir').'/'.$app.'/config/view.yml', '##', '##', array(

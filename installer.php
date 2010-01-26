@@ -11,9 +11,9 @@ function _exec()
 global $filesystem;
 $filesystem = $this->getFilesystem();
 
-/**
- * configure...
- */
+##############################################################################
+# CONFIGURE                                                                  #
+##############################################################################
 
 $remove = array(
   sfConfig::get('sf_config_dir').'/databases.yml',
@@ -35,9 +35,9 @@ $plugins = array(
   'sfTaskExtraPlugin'     => 'http://svn.symfony-project.com/plugins/sfTaskExtraPlugin/trunk',
 );
 
-/**
- * execute...
- */
+##############################################################################
+# EXECUTE                                                                    #
+##############################################################################
 
 // install files
 $this->getFilesystem()->remove(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php');
@@ -68,6 +68,8 @@ foreach ($ignore as $directory)
 {
   _exec('svn ps svn:ignore --file=%s %s', $tmp, $directory);
 }
+file_put_contents($tmp, '*.php');
+_exec('svn ps svn:ignore --file=%s %s', $tmp, sfConfig::get('sf_web_dir'));
 $filesystem->remove($tmp);
 
 _exec('svn ps svn:ignore databases.yml %s', sfConfig::get('sf_config_dir'));
@@ -95,6 +97,6 @@ else
 if (sfConfig::get('sf_symfony_lib_dir') != sfConfig::get('sf_lib_dir').'/vendor/symfony')
 {
   _exec('svn mkdir %s', sfConfig::get('sf_lib_dir').'/vendor');
-  _exec('svn ps svn:externals %s %s', 'symfony http://svn.symfony-project.com/branches/1.3', sfConfig::get('sf_lib_dir').'/vendor');
+  _exec('svn ps svn:externals %s %s', 'symfony http://svn.symfony-project.com/branches/1.4', sfConfig::get('sf_lib_dir').'/vendor');
   _exec('cp -R %s %s', sfConfig::get('sf_symfony_lib_dir').'/..', sfConfig::get('sf_lib_dir').'/vendor/symfony');
 }
