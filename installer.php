@@ -31,8 +31,8 @@ $ignore = array(
 );
 
 $plugins = array(
-  'sfDoctrineGuardPlugin' => 'http://svn.symfony-project.com/plugins/sfDoctrineGuardPlugin/trunk',
-  'sfTaskExtraPlugin'     => 'http://svn.symfony-project.com/plugins/sfTaskExtraPlugin/trunk',
+  'sfDoctrineGuardPlugin' => 'http://svn.symfony-project.com/plugins/sfDoctrineGuardPlugin/branches/1.3',
+  'sfTaskExtraPlugin'     => 'http://svn.symfony-project.com/plugins/sfTaskExtraPlugin/branches/1.3',
 );
 
 ##############################################################################
