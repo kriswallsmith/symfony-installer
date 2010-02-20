@@ -40,12 +40,12 @@ $plugins = array(
 ##############################################################################
 
 // install files
-$this->getFilesystem()->remove(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php');
+$filesystem->remove(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php');
 $this->installDir(dirname(__FILE__).'/project');
 
 // javascript
 $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
-$this->getFilesystem()->rename(
+$filesystem->rename(
   sfConfig::get('sf_web_dir').'/js/project',
   sfConfig::get('sf_web_dir').'/js/'.str_replace('.', '_', $properties['symfony']['name'])
 );
