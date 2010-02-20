@@ -15,6 +15,8 @@ $filesystem = $this->getFilesystem();
 # CONFIGURE                                                                  #
 ##############################################################################
 
+$isSubversion = file_exists('.svn');
+
 $remove = array(
   sfConfig::get('sf_config_dir').'/databases.yml',
   sfConfig::get('sf_config_dir').'/rsync_exclude.txt',
@@ -60,30 +62,55 @@ array_map(array('sfToolkit', 'clearDirectory'), $remove);
 $filesystem->remove($remove);
 
 // svn
-_exec('svn add *');
-
-$this->logSection('file+', $tmp = sfConfig::get('sf_cache_dir').'/svnprop.tmp');
-file_put_contents($tmp, '*');
-foreach ($ignore as $directory)
+if ($isSubversion)
 {
-  _exec('svn ps svn:ignore --file=%s %s', $tmp, $directory);
-}
-file_put_contents($tmp, '*.php');
-_exec('svn ps svn:ignore --file=%s %s', $tmp, sfConfig::get('sf_web_dir'));
-$filesystem->remove($tmp);
+  _exec('svn add *');
 
-_exec('svn ps svn:ignore databases.yml %s', sfConfig::get('sf_config_dir'));
+  $this->logSection('file+', $tmp = sfConfig::get('sf_cache_dir').'/svnprop.tmp');
+  file_put_contents($tmp, '*');
+  foreach ($ignore as $directory)
+  {
+    _exec('svn ps svn:ignore --file=%s %s', $tmp, $directory);
+  }
+  file_put_contents($tmp, '*.php');
+  _exec('svn ps svn:ignore --file=%s %s', $tmp, sfConfig::get('sf_web_dir'));
+  $filesystem->remove($tmp);
+
+  _exec('svn ps svn:ignore databases.yml %s', sfConfig::get('sf_config_dir'));
+}
 
 // plugins
 if (count($plugins))
 {
-  $externals = '';
-  foreach ($plugins as $name => $path)
+  if ($isSubversion)
   {
-    _exec('svn co %s %s', $path, sfConfig::get('sf_plugins_dir').'/'.$name);
+    // install plugins as svn externals
+    $externals = '';
+    foreach ($plugins as $name => $path)
+    {
+      _exec('svn co %s %s', $path, sfConfig::get('sf_plugins_dir').'/'.$name);
       $externals .= $name.' '.$path.PHP_EOL;
+    }
+    _exec('svn ps svn:externals %s %s', trim($externals), sfConfig::get('sf_plugins_dir'));
   }
-  _exec('svn ps svn:externals %s %s', trim($externals), sfConfig::get('sf_plugins_dir'));
+  else
+  {
+    foreach ($plugins as $name => $path)
+    {
+      try
+      {
+        // export plugins from svn
+        _exec('svn export %s %s', $path, sfConfig::get('sf_plugins_dir').'/'.$name);
+      }
+      catch (Exception $e)
+      {
+        // install via PEAR
+        $this->logSection('error', $e->getMessage(), null, 'ERROR');
+        $this->getPluginManager()->installPlugin($name);
+      }
+    }
+  }
+
   $filesystem->replaceTokens(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php', '##', '##', array(
     'PLUGINS' => "      '".implode("',".PHP_EOL."      '", array_keys($plugins))."',",
   ));
@@ -96,7 +123,22 @@ else
 // copy core into project
 if (sfConfig::get('sf_symfony_lib_dir') != sfConfig::get('sf_lib_dir').'/vendor/symfony')
 {
-  _exec('svn mkdir %s', sfConfig::get('sf_lib_dir').'/vendor');
-  _exec('svn ps svn:externals %s %s', 'symfony http://svn.symfony-project.com/branches/1.4', sfConfig::get('sf_lib_dir').'/vendor');
-  _exec('cp -R %s %s', sfConfig::get('sf_symfony_lib_dir').'/..', sfConfig::get('sf_lib_dir').'/vendor/symfony');
+  if ($isSubversion)
+  {
+    _exec('svn mkdir %s', sfConfig::get('sf_lib_dir').'/vendor');
+    _exec('svn ps svn:externals %s %s', 'symfony http://svn.symfony-project.com/branches/'.substr(SYMFONY_VERSION, 0, 3), sfConfig::get('sf_lib_dir').'/vendor');
+  }
+  else
+  {
+    $filesystem->mkdirs(sfConfig::get('sf_lib_dir').'/vendor');
+  }
+
+  if (!$isSubversion && file_exists(sfConfig::get('sf_symfony_lib_dir').'/.svn'))
+  {
+    _exec('svn export %s %s', sfConfig::get('sf_symfony_lib_dir').'/..', sfConfig::get('sf_lib_dir').'/vendor/symfony');
+  }
+  else
+  {
+    _exec('cp -R %s %s', sfConfig::get('sf_symfony_lib_dir').'/..', sfConfig::get('sf_lib_dir').'/vendor/symfony');
+  }
 }
