@@ -81,11 +81,11 @@ if (count($plugins))
   foreach ($plugins as $name => $path)
   {
     _exec('svn co %s %s', $path, sfConfig::get('sf_plugins_dir').'/'.$name);
-    $externals .= $name.' '.$path."\n";
+      $externals .= $name.' '.$path.PHP_EOL;
   }
   _exec('svn ps svn:externals %s %s', trim($externals), sfConfig::get('sf_plugins_dir'));
   $filesystem->replaceTokens(sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php', '##', '##', array(
-    'PLUGINS' => "      '".implode("',\n      '", array_keys($plugins))."',",
+    'PLUGINS' => "      '".implode("',".PHP_EOL."      '", array_keys($plugins))."',",
   ));
 }
 else
