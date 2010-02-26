@@ -15,6 +15,11 @@ class ProjectConfiguration extends sfProjectConfiguration
     $this->dispatcher->connect('command.post_command', array($this, 'postCommand'));
   }
 
+  public function configureDoctrine(Doctrine_Manager $manager)
+  {
+    $manager->setAttribute(Doctrine::ATTR_IDXNAME_FORMAT, '%s');
+  }
+
   public function postCommand(sfEvent $event)
   {
     $task = $event->getSubject();
