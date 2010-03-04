@@ -33,3 +33,4 @@ all:
     lazy_cache_key:         true
     use_database:           ##USE_DATABASE##
     enabled_modules:        [default, sfGuardAuth]
+    check_lock:             true
