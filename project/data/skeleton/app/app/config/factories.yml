@@ -1,7 +1,9 @@
 prod:
   logger:
+    class: sfFileLogger
     param:
-      level: notice
+      level: debug
+      file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
 
 cli:
   controller:
