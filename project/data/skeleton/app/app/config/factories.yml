@@ -2,7 +2,7 @@ prod:
   logger:
     class: sfFileLogger
     param:
-      level: debug
+      level: err
       file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
 
 cli:
