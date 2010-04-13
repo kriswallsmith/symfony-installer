@@ -4,6 +4,7 @@
 prod:
   .settings:
     no_script_name:         ##NO_SCRIPT_NAME##
+    cache:                  true
 
 staging:
   .settings:

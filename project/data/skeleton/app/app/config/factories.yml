@@ -8,6 +8,13 @@ prod: &prod
       level:   err
       file:    %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
       loggers: ~
+  # <?php if (extension_loaded('apc')): ?> #
+  view_cache:
+    class: sfAPCCache
+  routing:
+    cache:
+      class: sfAPCCache
+  # <?php endif; ?> #
 
 staging: *prod
 
