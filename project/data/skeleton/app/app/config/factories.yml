@@ -1,7 +1,7 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/05-Factories
 
-prod:
+prod: &prod
   logger:
     class: sfFileLogger
     param:
@@ -16,6 +16,8 @@ cli:
     class: sfConsoleRequest
   response:
     class: sfConsoleResponse
+
+staging: *prod
 
 test:
   storage:
