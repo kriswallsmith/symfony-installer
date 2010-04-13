@@ -18,6 +18,7 @@ class ProjectConfiguration extends sfProjectConfiguration
   public function configureDoctrine(Doctrine_Manager $manager)
   {
     $manager->setAttribute(Doctrine::ATTR_IDXNAME_FORMAT, '%s');
+    $manager->setAttribute(Doctrine::ATTR_USE_NATIVE_ENUM, true);
   }
 
   public function postCommand(sfEvent $event)
