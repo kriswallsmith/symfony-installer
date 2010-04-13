@@ -9,14 +9,6 @@ prod: &prod
       file:    %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
       loggers: ~
 
-cli:
-  controller:
-    class: sfConsoleController
-  request:
-    class: sfConsoleRequest
-  response:
-    class: sfConsoleResponse
-
 staging: *prod
 
 test:
