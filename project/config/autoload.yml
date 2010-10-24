@@ -1,0 +1,3 @@
+autoload:
+  project:
+    exclude: [migration]
