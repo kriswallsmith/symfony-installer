@@ -12,6 +12,7 @@ class ProjectConfiguration extends sfProjectConfiguration
 ##PLUGINS##
     ));
 
+    $this->dispatcher->connect('command.pre_command', array($this, 'preCommand'));
     $this->dispatcher->connect('command.post_command', array($this, 'postCommand'));
   }
 
@@ -19,6 +20,19 @@ class ProjectConfiguration extends sfProjectConfiguration
   {
     $manager->setAttribute(Doctrine::ATTR_IDXNAME_FORMAT, '%s');
     $manager->setAttribute(Doctrine::ATTR_USE_NATIVE_ENUM, true);
+  }
+
+  public function preCommand(sfEvent $event)
+  {
+    $task = $event->getSubject();
+
+    if ($task instanceof sfBaseTask)
+    {
+      foreach (array('cache', 'log', 'upload') as $name)
+      {
+        $task->getFilesystem()->mkdirs(sfConfig::get('sf_'.$name.'_dir'));
+      }
+    }
   }
 
   public function postCommand(sfEvent $event)
