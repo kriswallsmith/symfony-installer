@@ -1,3 +1,3 @@
 autoload:
   project:
-    exclude: [migration]
+    exclude: [migration, task]
