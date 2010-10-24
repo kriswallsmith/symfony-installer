@@ -16,6 +16,7 @@ $filesystem = $this->getFilesystem();
 ##############################################################################
 
 $isSubversion = file_exists('.svn');
+$isGit = file_exists('.git');
 
 $remove = array(
   sfConfig::get('sf_config_dir').'/databases.yml',
@@ -77,6 +78,12 @@ if ($isSubversion)
   $filesystem->remove($tmp);
 
   _exec('svn ps svn:ignore databases.yml %s', sfConfig::get('sf_config_dir'));
+}
+
+// git
+if (!$isGit)
+{
+  $filesystem->remove(sfConfig::get('sf_root_dir').'/.gitignore');
 }
 
 // plugins

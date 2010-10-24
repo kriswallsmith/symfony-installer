@@ -1,0 +1,8 @@
+base
+/cache
+/config/databases.yml
+/data/sql
+/log
+/web/*.php
+/web/sf*
+/web/uploads/*
